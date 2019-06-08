@@ -9,8 +9,10 @@ public class Main {
         int n = scanner.nextInt();
         int m = scanner.nextInt();
         int[][] matrixA = fillMatrix(n, m);
+        int constant = scanner.nextInt();
 
-        scanner.nextLine();
+        printMatrix(multiplyOnConstant(matrixA, constant));
+        /*scanner.nextLine();
 
         n = scanner.nextInt();
         m = scanner.nextInt();
@@ -22,7 +24,7 @@ public class Main {
         }
         else {
             printMatrix(sum);
-        }
+        }*/
     }
 
     static int[][] fillMatrix(int n, int m) {
@@ -66,5 +68,17 @@ public class Main {
         }
 
         return result;
+    }
+
+    private static int[][] multiplyOnConstant (int[][] matrix, int constant) {
+        int n = matrix.length;
+        int m = matrix[0].length;
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                matrix[i][j] *= constant;
+            }
+        }
+        return matrix;
     }
 }
