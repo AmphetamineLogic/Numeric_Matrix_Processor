@@ -23,13 +23,9 @@ public class Main {
         else {
             printMatrix(sum);
         }
-//        printMatrix(matrixA);
-//        printMatrix(matrixB);
-
     }
 
     static int[][] fillMatrix(int n, int m) {
-//        Scanner scanner = new Scanner(System.in);
         int[][] matrix = new int[n][m];
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
