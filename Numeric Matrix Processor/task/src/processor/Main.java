@@ -13,6 +13,7 @@ public class Main {
         System.out.println("1. Add matrices\n" +
                 "2. Multiply matrix to a constant\n" +
                 "3. Multiply matrices\n" +
+                "4. Transpose matrix\n" +
                 "0. Exit\n");
         System.out.print("Your choice: ");
         int choice = scanner.nextInt();
@@ -26,6 +27,9 @@ public class Main {
                 break;
             case 3:
                 multiplyMatricesMenu();
+                break;
+            case 4:
+                transposeMatricesMenu();
                 break;
             case 0:
                 return;
@@ -67,7 +71,7 @@ public class Main {
         showMainMenu();
     }
 
-        private static void multiplyMatricesMenu() {
+    private static void multiplyMatricesMenu() {
         System.out.print("Enter size of first matrix: ");
         int n = scanner.nextInt();
         int m = scanner.nextInt();
@@ -84,6 +88,27 @@ public class Main {
 
         System.out.println("The multiplication result is:");
         printMatrix(multiplyMatrices(matrixA, matrixB));
+
+        showMainMenu();
+    }
+
+    private static void transposeMatricesMenu() {
+        System.out.println("1. Main diagonal\n" +
+                "2. Side diagonal\n" +
+                "3. Vertical line\n" +
+                "4. Horizontal line\n");
+        System.out.print("Your choice: ");
+
+        int choice = scanner.nextInt();
+
+        System.out.print("Enter matrix size: ");
+        int n = scanner.nextInt();
+        int m = scanner.nextInt();
+
+        System.out.println("Enter matrix:");
+        double[][] matrix = fillMatrix(n, m);
+
+        transposeMatrix(matrix, choice);
 
         showMainMenu();
     }
@@ -164,6 +189,97 @@ public class Main {
                 matrix[i][j] *= constant;
             }
         }
+
         return matrix;
+    }
+
+    private static void transposeMatrix (double[][] matrix, int choice) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+        double[][] result = null;
+
+        switch (choice) {
+            case 1:
+                if (m == n) {
+                    result = transposeMatrixMainDiagonal(matrix);
+                } else {
+                    result = null;
+                }
+                break;
+            case 2:
+                if (m == n) {
+                    result = transposeMatrixSideDiagonal(matrix);
+                } else {
+                    result = null;
+                }
+                break;
+            case 3:
+                result = transposeMatrixVerticalLine(matrix);
+                break;
+            case 4:
+                result = transposeMatrixHorizontalLine(matrix);
+                break;
+            default:
+                break;
+        }
+
+        if (result == null) {
+            System.out.println("Operation not supported");
+        }
+        else {
+            printMatrix(result);
+        }
+    }
+
+    private static double[][] transposeMatrixMainDiagonal (double[][] matrix) {
+        int n = matrix.length;
+        double[][] result = new double[n][n];
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                result[i][j] = matrix[j][i];
+            }
+        }
+
+        return result;
+    }
+
+    private static double[][] transposeMatrixSideDiagonal (double[][] matrix) {
+        int n = matrix.length;
+        double[][] result = new double[n][n];
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                result[i][j] = matrix[n - j - 1][n - i - 1];
+            }
+        }
+
+        return result;
+    }
+
+    private static double[][] transposeMatrixVerticalLine (double[][] matrix) {
+        int n = matrix.length;
+        int m = matrix[0].length;
+        double[][] result = new double[n][m];
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                result[i][j] = matrix[i][m - j - 1];
+            }
+        }
+
+        return result;
+    }
+
+    private static double[][] transposeMatrixHorizontalLine (double[][] matrix) {
+        int n = matrix.length;
+        int m = matrix[0].length;
+        double[][] result = new double[n][m];
+
+        for (int i = 0; i < n; i++) {
+            result[i] = matrix[n - i - 1];
+        }
+
+        return result;
     }
 }
