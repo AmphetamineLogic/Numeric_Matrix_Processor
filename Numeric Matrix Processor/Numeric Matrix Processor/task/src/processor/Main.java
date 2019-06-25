@@ -323,6 +323,7 @@ public class Main {
             for (int j = 0; j < size; j++) {
                 if (j < column) {
                     result[i][j] = sourceMatrix[i+1][j];
+
                 }
                 else {
                     result[i][j] = sourceMatrix[i+1][j+1];
