@@ -1,5 +1,6 @@
 package processor;
 
+import javax.sound.midi.Soundbank;
 import java.util.Scanner;
 
 public class Main {
@@ -14,6 +15,7 @@ public class Main {
                 "2. Multiply matrix to a constant\n" +
                 "3. Multiply matrices\n" +
                 "4. Transpose matrix\n" +
+                "5. Calculate a determinant\n" +
                 "0. Exit\n");
         System.out.print("Your choice: ");
         int choice = scanner.nextInt();
@@ -30,6 +32,9 @@ public class Main {
                 break;
             case 4:
                 transposeMatricesMenu();
+                break;
+            case 5:
+                determinantMenu();
                 break;
             case 0:
                 return;
@@ -109,6 +114,19 @@ public class Main {
         double[][] matrix = fillMatrix(n, m);
 
         transposeMatrix(matrix, choice);
+
+        showMainMenu();
+    }
+
+    private static void determinantMenu() {
+        System.out.print("Enter matrix size: ");
+        int n = scanner.nextInt();
+        int m = scanner.nextInt();
+
+        System.out.println("Enter matrix:");
+
+        double[][] matrix = fillMatrix(n, m);
+        printMatrix(generatSubmatrix(matrix, 2));
 
         showMainMenu();
     }
@@ -280,6 +298,38 @@ public class Main {
             result[i] = matrix[n - i - 1];
         }
 
+        return result;
+    }
+
+    private static double determinant (double[][] matrix ) {
+        double determinant = 0;
+        if (matrix.length == 2) {
+            determinant = matrix[0][0] * matrix[1][1] - matrix[1][0] * matrix[0][1];
+        }
+        else {
+            for (int i = 0; i < matrix.length - 1; i++) {
+                determinant += Math.pow(-1, i);
+            }
+        }
+
+        return determinant;
+    }
+
+    private static double[][] generatSubmatrix (double[][] sourceMatrix, int column) {
+        int size = sourceMatrix.length - 1;
+        double[][] result = new double[size][size];
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (j < column) {
+                    result[i][j] = sourceMatrix[i+1][j];
+
+                }
+                else {
+                    result[i][j] = sourceMatrix[i+1][j+1];
+                }
+            }
+        }
         return result;
     }
 }
