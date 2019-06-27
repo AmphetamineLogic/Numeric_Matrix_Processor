@@ -126,7 +126,8 @@ public class Main {
         System.out.println("Enter matrix:");
 
         double[][] matrix = fillMatrix(n, m);
-        printMatrix(generatSubmatrix(matrix, 2));
+        System.out.println("The determinant is:\n" + determinant(matrix));
+        System.out.println();
 
         showMainMenu();
     }
@@ -301,21 +302,22 @@ public class Main {
         return result;
     }
 
-    private static double determinant (double[][] matrix ) {
-        double determinant = 0;
+    private static double determinant (double[][] matrix) {
+        double determinant;
         if (matrix.length == 2) {
             determinant = matrix[0][0] * matrix[1][1] - matrix[1][0] * matrix[0][1];
         }
         else {
-            for (int i = 0; i < matrix.length - 1; i++) {
-                determinant += Math.pow(-1, i);
+            determinant = 0;
+            for (int i = 0; i < matrix.length; i++) {
+                determinant += Math.pow(-1, i) * matrix[0][i] * determinant(generateSubmatrix(matrix, i));
             }
         }
 
         return determinant;
     }
 
-    private static double[][] generatSubmatrix (double[][] sourceMatrix, int column) {
+    private static double[][] generateSubmatrix (double[][] sourceMatrix, int column) {
         int size = sourceMatrix.length - 1;
         double[][] result = new double[size][size];
 

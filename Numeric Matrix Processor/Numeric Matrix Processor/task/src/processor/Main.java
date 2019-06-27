@@ -16,6 +16,7 @@ public class Main {
                 "3. Multiply matrices\n" +
                 "4. Transpose matrix\n" +
                 "5. Calculate a determinant\n" +
+                "6. Inverse matrix\n" +
                 "0. Exit\n");
         System.out.print("Your choice: ");
         int choice = scanner.nextInt();
@@ -35,6 +36,9 @@ public class Main {
                 break;
             case 5:
                 determinantMenu();
+                break;
+            case 6:
+                inverseMatrixMenu();
                 break;
             case 0:
                 return;
@@ -126,7 +130,23 @@ public class Main {
         System.out.println("Enter matrix:");
 
         double[][] matrix = fillMatrix(n, m);
-        printMatrix(generatSubmatrix(matrix, 2));
+        System.out.println("The determinant is:\n" + determinant(matrix));
+        System.out.println();
+
+        showMainMenu();
+    }
+
+    private static void inverseMatrixMenu() {
+        System.out.print("Enter matrix size: ");
+        int n = scanner.nextInt();
+        int m = scanner.nextInt();
+
+        System.out.println("Enter matrix:");
+
+        double[][] matrix = fillMatrix(n, m);
+
+        System.out.println("Inverse matrix is:");
+        printMatrix(inverseMatrix(matrix));
 
         showMainMenu();
     }
@@ -301,35 +321,68 @@ public class Main {
         return result;
     }
 
-    private static double determinant (double[][] matrix ) {
-        double determinant = 0;
+    private static double determinant (double[][] matrix) {
+        double determinant;
         if (matrix.length == 2) {
             determinant = matrix[0][0] * matrix[1][1] - matrix[1][0] * matrix[0][1];
         }
         else {
-            for (int i = 0; i < matrix.length - 1; i++) {
-                determinant += Math.pow(-1, i);
+            determinant = 0;
+            for (int i = 0; i < matrix.length; i++) {
+                determinant += Math.pow(-1, i) * matrix[0][i] * determinant(generateSubmatrix(matrix, 0, i));
             }
         }
 
         return determinant;
     }
 
-    private static double[][] generatSubmatrix (double[][] sourceMatrix, int column) {
+    private static double[][] generateSubmatrix (double[][] sourceMatrix, int row, int column) {
         int size = sourceMatrix.length - 1;
         double[][] result = new double[size][size];
 
+        int rowShift = 0;
+        int columnShift = 0;
         for (int i = 0; i < size; i++) {
+            if (i < row) {
+                rowShift = 0;
+            }
+            else {
+                rowShift = 1;
+            }
             for (int j = 0; j < size; j++) {
                 if (j < column) {
-                    result[i][j] = sourceMatrix[i+1][j];
-
+                    columnShift = 0;
                 }
                 else {
-                    result[i][j] = sourceMatrix[i+1][j+1];
+                    columnShift = 1;
                 }
+                result[i][j] = sourceMatrix[i + rowShift][j + columnShift];
             }
         }
         return result;
+    }
+
+    private static double[][] inverseMatrix (double[][] matrix) {
+
+        int size = matrix.length;
+        double[][] invertedMatrix;
+
+        double determinant = determinant(matrix);
+        if (determinant == 0) {
+            return null;
+        }
+        else {
+            invertedMatrix = new double[size][size];
+        }
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                invertedMatrix[i][j] =
+                        Math.pow(-1, i + 1 + j + 1) * determinant(generateSubmatrix(matrix, i, j));
+            }
+        }
+        invertedMatrix = multiplyOnConstant(invertedMatrix, 1 / determinant);
+        invertedMatrix = transposeMatrixMainDiagonal(invertedMatrix);
+        return invertedMatrix;
     }
 }
